@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.11"
+    id("org.jmailen.kotlinter") version "1.20.1"
+    id("io.gitlab.arturbosch.detekt") version "1.0.0-RC12"
 }
 
 group = "aph"
@@ -25,4 +27,9 @@ fun DependencyHandlerScope.junit(version: String) {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+detekt {
+    input = files("src/main/kotlin", "src/test/kotlin")
+    config = files("src/test/resources/detekt.yml")
 }

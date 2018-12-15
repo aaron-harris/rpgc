@@ -1,7 +1,7 @@
 package aph.rpgc
 
-internal const val greeting = "Hello, World!"
+internal const val GREETING = "Hello, World!"
 
 fun main(args: Array<String>) {
-    println(greeting)
+    println(GREETING)
 }
