@@ -13,6 +13,14 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    junit("5.3.2")
+}
+
+fun DependencyHandlerScope.junit(version: String) {
+    "org.junit.jupiter".let { group ->
+        testImplementation(group, "junit-jupiter-api", version)
+        testRuntime(group, "junit-jupiter-engine", version)
+    }
 }
 
 tasks.withType<KotlinCompile> {
