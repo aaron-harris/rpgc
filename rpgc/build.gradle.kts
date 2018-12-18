@@ -1,3 +1,4 @@
+import java.net.URI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -12,10 +13,12 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     jcenter()
+    maven { url = URI.create("https://dl.bintray.com/hotkeytlt/maven") } // for betterParse
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("com.github.h0tk3y.betterParse:better-parse-jvm:0.4.0-alpha-3")
     junit()
 }
 
