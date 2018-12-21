@@ -16,14 +16,13 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    junit("5.3.2")
+    junit()
 }
 
-fun DependencyHandlerScope.junit(version: String) {
-    "org.junit.jupiter".let { group ->
-        testImplementation(group, "junit-jupiter-api", version)
-        testRuntime(group, "junit-jupiter-engine", version)
-    }
+fun DependencyHandlerScope.junit() {
+    testImplementation("org.junit.platform:junit-platform-launcher:1.3.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testImplementation("net.jqwik:jqwik:0.9.3")
 }
 
 tasks.withType<KotlinCompile> {
@@ -33,4 +32,11 @@ tasks.withType<KotlinCompile> {
 detekt {
     input = files("src/main/kotlin", "src/test/kotlin")
     config = files("src/test/resources/detekt.yml")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform {
+        includeEngines("jqwik")
+    }
+    include("**/*Tests.class")
 }
