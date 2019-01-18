@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
  * - Single-line (do not contain line breaks, carriage returns, or similar characters).
  * - Trimmed (begins and ends in non-whitespace).
  * - Not blank.
- * - Contain only characters belonging to the Unicode range 0000 - 036F.
+ * - Contain only characters belonging to the Unicode range 0001 - 036F.
  *
  * Applies to parameters which are also annotated with [net.jqwik.api.ForAll].
  */
@@ -38,7 +38,7 @@ class LineConfigurator : ArbitraryConfiguratorBase() {
         .map { it.trim() }.filter { it.isNotBlank() }
 
     companion object {
-        internal val CHAR_RANGE = '\u0000'..'\u036f'
+        internal val CHAR_RANGE = '\u0001'..'\u036f'
         internal val LINE_BREAK_CHARS = setOf('\n', '\r', '\u0085')
     }
 }

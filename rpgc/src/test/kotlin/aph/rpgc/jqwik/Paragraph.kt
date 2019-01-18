@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
  * - Use Unix line separators.
  * - Contain no blank lines.
  * - Trimmed (ends in non-whitespace).
- * - Contain only characters belonging to the Unicode range 0000 - 036F.
+ * - Contain only characters belonging to the Unicode range 0001 - 036F.
  *
  * Applies to parameters which are also annotated with [net.jqwik.api.ForAll].
  */
