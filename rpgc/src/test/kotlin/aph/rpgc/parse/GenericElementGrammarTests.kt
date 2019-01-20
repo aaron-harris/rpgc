@@ -29,4 +29,23 @@ class GenericElementGrammarTests {
             """.trimMargin())
         )
     }
+
+    @Property fun `Can parse element with two paragraph description`(
+        @ForAll @Line elementName: String,
+        @ForAll @Paragraph description1: String,
+        @ForAll @Paragraph description2: String
+    ) {
+        assertEquals(
+            GenericElement(name = elementName, description = listOf(
+                description1.replace('\n', ' '),
+                description2.replace('\n', ' ')
+            )),
+            GenericElementGrammar.parseToEnd("""
+                |# $elementName
+                ${description1.prependIndent("|")}
+                |
+                ${description2.prependIndent("|")}
+            """.trimMargin())
+        )
+    }
 }

@@ -4,7 +4,7 @@ import aph.rpgc.core.GenericElement
 import aph.rpgc.core.Label
 import aph.rpgc.core.Paragraph
 import com.github.h0tk3y.betterParse.combinators.and
-import com.github.h0tk3y.betterParse.combinators.map
+import com.github.h0tk3y.betterParse.combinators.oneOrMore
 import com.github.h0tk3y.betterParse.combinators.optional
 import com.github.h0tk3y.betterParse.combinators.separatedTerms
 import com.github.h0tk3y.betterParse.combinators.skip
@@ -19,14 +19,13 @@ object GenericElementGrammar : Grammar<GenericElement>() {
     private val line by token(".+")
     private val newline by token("\n")
 
-    private val paragraphParser: Parser<Paragraph> by separatedTerms(line, newline) use {
-        joinToString(separator = " ") { it.text }
-    }
+    private val terminatedLine: Parser<String> by line and skip(optional(newline)) use { text }
+    private val paragraph: Parser<Paragraph> by oneOrMore(terminatedLine) use { joinToString(separator = " ") }
 
-    private val nameParser: Parser<Label> by skip(nameStartMarker) and line and skip(optional(newline)) use { text }
-    private val descriptionParser: Parser<List<Paragraph>> by optional(paragraphParser) map { listOfNotNull(it) }
+    private val name: Parser<Label> by skip(nameStartMarker) and terminatedLine
+    private val description: Parser<List<Paragraph>> by separatedTerms(paragraph, newline, acceptZero = true)
 
-    override val rootParser: Parser<GenericElement> by nameParser and descriptionParser use {
+    override val rootParser: Parser<GenericElement> by name and description use {
         GenericElement(name = t1, description = t2)
     }
 }
