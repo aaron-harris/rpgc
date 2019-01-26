@@ -2,7 +2,7 @@ package aph.rpgc.parse
 
 import aph.rpgc.core.GenericElement
 import aph.rpgc.jqwik.Line
-import aph.rpgc.jqwik.Paragraph
+import aph.rpgc.jqwik.OfParagraphs
 import com.github.h0tk3y.betterParse.grammar.parseToEnd
 import net.jqwik.api.ForAll
 import net.jqwik.api.Property
@@ -17,34 +17,15 @@ class GenericElementGrammarTests {
         )
     }
 
-    @Property fun `Can parse element with one paragraph description`(
+    @Property(tries = 500) fun `Can parse element with just name and description`(
         @ForAll @Line elementName: String,
-        @ForAll @Paragraph description: String
+        @ForAll @OfParagraphs description: List<String>
     ) {
         assertEquals(
-            GenericElement(name = elementName, description = listOf(description.replace('\n', ' '))),
+            GenericElement(name = elementName, description = description.map { it.replace('\n', ' ') }),
             GenericElementGrammar.parseToEnd("""
                 |# $elementName
-                ${description.prependIndent("|")}
-            """.trimMargin())
-        )
-    }
-
-    @Property fun `Can parse element with two paragraph description`(
-        @ForAll @Line elementName: String,
-        @ForAll @Paragraph description1: String,
-        @ForAll @Paragraph description2: String
-    ) {
-        assertEquals(
-            GenericElement(name = elementName, description = listOf(
-                description1.replace('\n', ' '),
-                description2.replace('\n', ' ')
-            )),
-            GenericElementGrammar.parseToEnd("""
-                |# $elementName
-                ${description1.prependIndent("|")}
-                |
-                ${description2.prependIndent("|")}
+                ${description.joinToString(separator = "\n\n").prependIndent("|")}
             """.trimMargin())
         )
     }
