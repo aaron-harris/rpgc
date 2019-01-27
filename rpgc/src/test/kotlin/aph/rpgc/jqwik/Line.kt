@@ -1,5 +1,6 @@
 package aph.rpgc.jqwik
 
+import aph.jqwik.ofelements.OfElementsConfigurator
 import aph.util.containsAny
 import aph.util.filterNot
 import net.jqwik.api.Arbitrary
@@ -27,10 +28,16 @@ import org.junit.jupiter.api.Assertions.assertTrue
 @MustBeDocumented
 annotation class Line
 
-class LineConfigurator : ArbitraryConfiguratorBase() {
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.TYPE)
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
+annotation class OfLines
 
-    @Suppress("UNUSED_PARAMETER", "unused")
+@Suppress("UNUSED_PARAMETER", "unused")
+class LineConfigurator : ArbitraryConfiguratorBase(), OfElementsConfigurator {
+
     fun configure(arbitrary: StringArbitrary, annotation: Line): Arbitrary<String> = configure(arbitrary)
+    fun configure(arbitrary: StringArbitrary, annotation: OfLines): Arbitrary<String> = configure(arbitrary)
 
     fun configure(arbitrary: StringArbitrary): Arbitrary<String> = arbitrary
         .withCharRange(CHAR_RANGE)
@@ -61,5 +68,16 @@ internal class LineConfiguratorTests {
 
     @Property fun `Standard character range`(@ForAll @Line s: String) {
         assertTrue(s.all { it in LineConfigurator.CHAR_RANGE })
+    }
+
+    @Property(tries = 100) fun `Configuration for @OfLines is applied correctly`(
+        @ForAll @OfLines xs: List<String>
+    ) {
+        xs.forEach {
+            `Single-line`(it)
+            `Trimmed`(it)
+            `Non-blank`(it)
+            `Standard character range`(it)
+        }
     }
 }

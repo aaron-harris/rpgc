@@ -14,7 +14,9 @@ import com.github.h0tk3y.betterParse.parser.Parser
 
 object GenericElementGrammar : Grammar<GenericElement>() {
 
-    private val nameStartMarker by token("# ")
+    internal const val NAME_MARKER = "# "
+
+    private val nameStartMarker by token(NAME_MARKER)
 
     private val line by token(".+")
     private val newline by token("\n")
